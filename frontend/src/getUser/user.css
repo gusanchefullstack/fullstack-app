@@ -28,3 +28,8 @@
 .actionButtons button {
     margin: 8px;
 }
+
+.noData {
+    text-align: center;
+    margin-top: 20px;
+}

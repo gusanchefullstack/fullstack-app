@@ -1,31 +1,43 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
-import "./addUser.css";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import "./updateUser.css";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const AddUser = () => {
-  const newUser = {
+const UpdateUser = () => {
+  const updatedUser = {
     name: "",
     email: "",
     country: "",
   };
-
-  const [user, setUser] = useState(newUser);
+  const [user, setUser] = useState(updatedUser);
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const inputHandler = (e) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
-    console.log(name, value);
+    console.log(user);
   };
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:3003/api/v1/users/${id}`)
+      .then((response) => {
+        console.log(response.data.data);
+        setUser(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [id]);
 
   const submitForm = async (e) => {
     e.preventDefault();
+    console.log(user);
     await axios
-      .post("http://localhost:3003/api/v1/users", user)
-      // eslint-disable-next-line no-unused-vars
+      .put(`http://localhost:3003/api/v1/users/${id}`, user)
       .then((response) => {
         toast.success(response.data.message, { position: "top-right" });
         navigate("/");
@@ -40,10 +52,10 @@ const AddUser = () => {
       <Link to="/" type="button" className="btn btn-secondary">
         <i className="fa-solid fa-backward"></i> Back
       </Link>
-      <h3>Add New User</h3>
+      <h3>Update User</h3>
       <form
         action=""
-        method="post"
+        // method="put"
         className="addUserForm"
         onSubmit={submitForm}
       >
@@ -52,6 +64,7 @@ const AddUser = () => {
           <input
             type="text"
             name="name"
+            value={user.name}
             id="name"
             onChange={inputHandler}
             autoComplete="off"
@@ -63,6 +76,7 @@ const AddUser = () => {
           <input
             type="email"
             name="email"
+            value={user.email}
             id="email"
             onChange={inputHandler}
             autoComplete="off"
@@ -74,6 +88,7 @@ const AddUser = () => {
           <input
             type="text"
             name="country"
+            value={user.country}
             id="country"
             onChange={inputHandler}
             autoComplete="off"
@@ -90,4 +105,4 @@ const AddUser = () => {
   );
 };
 
-export default AddUser;
+export default UpdateUser;

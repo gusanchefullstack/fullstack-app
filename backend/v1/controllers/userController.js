@@ -4,7 +4,6 @@ const getAllUsers = async (req, res, next) => {
   try {
     const users = await userService.getAllUsers();
     res.status(200).json({
-
       users,
     });
   } catch (error) {
@@ -34,8 +33,8 @@ const createUser = async (req, res, next) => {
     //   data: createdUser,
     // });
     res.status(200).json({
-      message: "User created successfully!!!"
-    })
+      message: "User created successfully!!!",
+    });
   } catch (error) {
     next(error);
   }
@@ -44,11 +43,19 @@ const createUser = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const userData = req.body;
-    const updatedUser = await userService.updateUser(id, userData);
+    const data = { 
+      name: req.body.name,
+      email: req.body.email,
+      country: req.body.country,
+    }
+
+    const updatedUser = await userService.updateUser(id, data);
+    // res.status(200).json({
+    //   status: "Ok",
+    //   data: updatedUser,
+    // });
     res.status(200).json({
-      status: "Ok",
-      data: updatedUser,
+      message: "User updated successfully!",
     });
   } catch (error) {
     next(error);
@@ -60,8 +67,7 @@ const deleteUser = async (req, res, next) => {
     const { id } = req.params;
     const deletedUser = await userService.deleteUser(id);
     res.status(200).json({
-      status: "Ok",
-      data: deletedUser,
+      message: "User deleted successfully!",
     });
   } catch (error) {
     next(error);
